@@ -36,11 +36,6 @@ from settings import WEB_CLIENT_ID
 EMAIL_SCOPE = endpoints.EMAIL_SCOPE
 API_EXPLORER_CLIENT_ID = endpoints.API_EXPLORER_CLIENT_ID
 
-SAVE_PROFILE_REQUEST_CONTAINER = endpoints.ResourceContainer(
-    displayName=messages.StringField(1),
-    teeShirtSize=messages.StringField(2)
-)
-
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 @endpoints.api( name='conference',
@@ -114,16 +109,11 @@ class ConferenceApi(remote.Service):
         """Return user profile."""
         return self._doProfile()
 
-    # TODO 1
-    # 1. change request class
-    # 2. pass request to _doProfile function
-    @endpoints.method(SAVE_PROFILE_REQUEST_CONTAINER, ProfileForm,
+    @endpoints.method(ProfileMiniForm, ProfileForm,
             path='profile', http_method='POST', name='saveProfile')
     def saveProfile(self, request):
         """Update & return user profile."""
-        new_profile = Profile(displayName=request.displayName, teeShirtSize=request.teeShirtSize)
-
-        return self._doProfile(new_profile)
+        return self._doProfile(request)
 
 
 # registers API
