@@ -68,12 +68,9 @@ class ConferenceApi(remote.Service):
             raise endpoints.UnauthorizedException('Authorization required')
 
         user_id = getUserId(user)
-        print user_id
         key = ndb.Key(Profile, user_id)
 
-        # TODO 3
-        # get the entity from datastore by using get() on the key
-        profile = None
+        profile = key.get()
         if not profile:
             profile = Profile(
                 key = key,
@@ -81,7 +78,7 @@ class ConferenceApi(remote.Service):
                 mainEmail= user.email(),
                 teeShirtSize = str(TeeShirtSize.NOT_SPECIFIED),
             )
-            
+
             profile.put()
 
         return profile      # return Profile
@@ -99,8 +96,8 @@ class ConferenceApi(remote.Service):
                     val = getattr(save_request, field)
                     if val:
                         setattr(prof, field, str(val))
-            # TODO 4
-            # put the modified profile to datastore
+            
+            prof.put()
 
         # return ProfileForm
         return self._copyProfileToForm(prof)
